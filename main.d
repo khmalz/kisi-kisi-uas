@@ -42,7 +42,8 @@ void main(string[] args)
         amountTotal += input.length.to!int;
 
         // Word Occurences
-        int[string] wordOccurences = countWordOcc(inputWithoutConj);
+        int[string] wordOccurences = countWordOcc(input);
+
         writefln("Word Occurences total: %d", wordOccurences.length);
         wordOccTotal += wordOccurences.length.to!int;
 
@@ -229,11 +230,13 @@ string createTitle(int[string] wordOcc)
 {
     string[] title;
 
-    auto sortableArray = wordOcc.byKeyValue.array;
-    auto sortedWowordOcc = sortableArray.sort!((a, b) => a.value > b.value).take(5);
+    auto sortedWowordOcc = wordOcc.byKeyValue.array.sort!((a, b) => a.value > b.value);
 
     foreach (e; sortedWowordOcc)
     {
+        if (conjunctions.canFind(e.key))
+            continue;
+
         if (title.length == 0 || !title.canFind(e.key))
         {
             bool skip = false;
