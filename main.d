@@ -21,6 +21,7 @@ void main(string[] args)
 
     int amountTotal, wordOccTotal;
     int[string][string] wordOccurencesAll;
+    int[char] alphanumAll;
     string[][string] textArticles;
 
     writeln(
@@ -71,11 +72,17 @@ void main(string[] args)
         int[char] alphanumeric = countAlphanumeric(inputWithoutConj);
         writefln("Alphanumeric occurences total: %d", alphanumeric.length);
 
+        foreach (key; alphanumeric.keys)
+        {
+            alphanumAll[key] += alphanumeric[key];
+        }
+
         writeln("--------------------------------------------------------------------------------");
     }
 
     writefln("Total amount words for all article is %s words", amountTotal);
     writefln("Total word occurences for all article is %s words", wordOccTotal);
+    writefln("Total alphanumeric for all article is %s letters", alphanumAll.length);
 
     // Problem 2
     writeln(
@@ -90,22 +97,30 @@ void main(string[] args)
         string[] splitQuery = query2.split();
 
         // check the user query is two or less 
-        if (splitQuery.length < 2)
-        {
-            query2 = [];
-        }
-        else if (splitQuery.length > 2)
+        if (splitQuery.length >= 2)
         {
             query2 = splitQuery[0 .. 2].join(" ");
+        }
+        else
+        {
+            query2 = [];
         }
     }
 
     string getRelevantArticle = findMostRelevantArticle(query2, textArticles);
+    if (!getRelevantArticle.empty)
+    {
+        writeln(getRelevantArticle);
 
-    string title = createTitle(wordOccurencesAll[getRelevantArticle]);
-    writefln("The most appropriate article for query \"%s\" is: %s",
-        query2, getRelevantArticle);
-    writefln("With the article title is \"%s\"", toTitleStyle(title));
+        string title = createTitle(wordOccurencesAll[getRelevantArticle]);
+        writefln("The most appropriate article for query \"%s\" is: %s",
+            query2, getRelevantArticle);
+        writefln("With the article title is \"%s\"", toTitleStyle(title));
+    }
+    else
+    {
+        writeln("No appropriate article found");
+    }
 
     // Problem 3
     writeln(
